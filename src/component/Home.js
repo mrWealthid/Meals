@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import About from './views/About';
+
 import { getRecipes } from '../component/utils/helpers';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import DisplayMeals from './views/DisplayMeals';
+import Sidebar from './views/Sidebar';
 
 const Home = () => {
   const { id } = useParams();
@@ -35,16 +37,11 @@ const Home = () => {
       <section className='flex'>
         <section className='bg-white w-1/3 h-screen '>
           {recipes.slice(0, 10).map((item) => (
-            <div key={item.id}>
-              <Link to={`/${item.id}`}>
-                {' '}
-                <p>{item.title}</p>
-              </Link>
-            </div>
+            <Sidebar key={item.id} {...item} />
           ))}
         </section>
         <section className=' w-full flex justify-center min-h-screen items-center '>
-          <About id={id} />
+          <DisplayMeals id={id} />
         </section>
       </section>
     </div>

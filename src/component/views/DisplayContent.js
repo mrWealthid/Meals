@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AboutContent = ({ recipe }) => {
+const DisplayContent = ({ recipe }) => {
   return (
     <section className='w-full'>
       <p>{recipe?.data?.title}</p>
@@ -17,4 +17,4 @@ const AboutContent = ({ recipe }) => {
   );
 };
 
-export default AboutContent;
+export default DisplayContent;

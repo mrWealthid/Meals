@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getRecipe } from '../utils/helpers';
 
-import Spinner from '../images/Spinner.svg';
-import AboutContent from './AboutContent';
+import DisplayContent from './DisplayContent';
+import Spinner from './Spinner';
 
-const About = ({ id }) => {
+const DisplayMeals = ({ id }) => {
   const [recipe, setRecipe] = useState({
     loading: false,
     data: null,
@@ -34,16 +34,16 @@ const About = ({ id }) => {
 
   function renderPage(recipe) {
     if (recipe?.loading) {
-      return <img src={Spinner} alt='spinner' className='w-12 h-12' />;
+      return <Spinner />;
     }
 
     if (recipe?.error) {
       return 'Opps 😢 An Error Occured';
     }
-    return <AboutContent recipe={recipe} />;
+    return <DisplayContent recipe={recipe} />;
   }
 
   return <>{renderPage(recipe)}</>;
 };
 
-export default About;
+export default DisplayMeals;
