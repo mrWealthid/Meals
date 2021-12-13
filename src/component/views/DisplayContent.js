@@ -7,11 +7,11 @@ const DisplayContent = ({ recipe }) => {
       <p>{recipe?.data?.publisher}</p>
       <div className='w-8/12 mx-auto'>
         {' '}
-        <img
+        {/* <img
           className='w-full'
           src={recipe?.data?.image_url}
           alt={recipe?.title}
-        />
+        /> */}
       </div>
     </section>
   );
