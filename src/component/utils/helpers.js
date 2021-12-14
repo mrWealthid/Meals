@@ -20,6 +20,7 @@ const getRecipe = async (id) => {
     ]);
 
     const data = await resp.data;
+
     return data;
   } catch (err) {
     throw err;
@@ -27,13 +28,24 @@ const getRecipe = async (id) => {
 };
 
 const getRecipes = async (search) => {
-  const resp = await Promise.race([
-    axios(`${API_URL}?search=${search}`),
-    timeout(TIMEOUT_SEC),
-  ]);
-  //   const resp = await axios(`${API_URL}?search=${search}`);
+  try {
+    const resp = await Promise.race([
+      axios(`${API_URL}?search=${search}`),
+      timeout(TIMEOUT_SEC),
+    ]);
 
-  const data = await resp.data;
-  return data;
+    const data = await resp.data;
+
+    console.log(data);
+
+    // if (!data || (Array.isArray(data) && data.length === 0))
+
+    if (data.results < 1) {
+      throw new Error('Recipe Not Found! Please try again ;)');
+    } else return data;
+  } catch (err) {
+    throw err;
+  }
+  //   const resp = await axios(`${API_URL}?search=${search}`);
 };
 export { getRecipe, getRecipes };

@@ -1,13 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const Sidebar = ({ id, title }) => {
+  const styles = {
+    color: 'grey',
+    // background: ' #fbdb89',
+  };
   return (
     <>
-      <Link to={`/${id}`}>
-        {' '}
-        <p>{title}</p>
-      </Link>
+      <NavLink
+        activeStyle={styles}
+        to={`/${id}`}
+        className='py-2 px-2 block text-gray-800 hover:bg-yellow-100'
+      >
+        {title}
+      </NavLink>
     </>
   );
 };

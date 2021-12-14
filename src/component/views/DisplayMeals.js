@@ -38,7 +38,11 @@ const DisplayMeals = ({ id }) => {
     }
 
     if (recipe?.error) {
-      return 'Opps 😢 An Error Occured';
+      return 'We could not find that recipe. Please try another one!';
+    }
+
+    if (!recipe?.data) {
+      return 'Start By Typing';
     }
     return <DisplayContent recipe={recipe} />;
   }

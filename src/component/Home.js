@@ -7,30 +7,35 @@ import Sidebar from './views/Sidebar';
 import Spinner from './views/Spinner';
 import { RESULT_PER_PAGE } from './config';
 
+import Topbar from './Topbar';
+
 const Home = () => {
   const { id } = useParams();
 
   const [recipes, setRecipes] = useState({
     loading: false,
     data: [],
-    error: false,
+    error: { type: false, msg: '' },
 
     resultPerPage: RESULT_PER_PAGE,
   });
 
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('pizza');
-
+  const [search, setSearch] = useState('');
+  const [input, setInput] = useState('');
+  const [show, setShow] = useState(false);
   useEffect(() => {
     // const API = 'https://forkify-api.herokuapp.com/api/v2/recipes?search=pizza';
     (async () => {
       try {
+        if (!search) return false;
         setRecipes({
           loading: true,
           data: [],
-          error: false,
+          error: { type: false, msg: '' },
           resultPerPage: RESULT_PER_PAGE,
         });
+
         const data = await getRecipes(search);
 
         const meal = data.data.recipes;
@@ -38,12 +43,18 @@ const Home = () => {
         setRecipes({
           loading: false,
           data: meal,
-          error: false,
+          error: { type: false, msg: '' },
           resultPerPage: RESULT_PER_PAGE,
         });
         console.log(meal);
       } catch (err) {
-        console.log(err);
+        console.log(err.message);
+        setRecipes({
+          loading: false,
+          data: [],
+          error: { type: true, msg: err.message },
+          resultPerPage: RESULT_PER_PAGE,
+        });
       }
     })();
   }, [search]);
@@ -57,10 +68,10 @@ const Home = () => {
 
     if (page === 1 && numberOfPages > 1) {
       return (
-        <div className='flex justify-end'>
+        <div className='flex mt-8 px-4 justify-end'>
           <button
             onClick={() => setPage(page + 1)}
-            className='bg-green-400 py-2 px-3 text-white rounded'
+            className='btn py-2 px-3 text-white rounded-xl'
           >
             Page {page + 1}
           </button>
@@ -71,10 +82,10 @@ const Home = () => {
     //last page
     if (page === numberOfPages && numberOfPages > 1) {
       return (
-        <div className='flex justify-end'>
+        <div className='flex mt-8 justify-end px-4'>
           <button
             onClick={() => setPage(page - 1)}
-            className='bg-green-400 py-2 px-3 text-white rounded'
+            className='btn py-2 px-3 text-white rounded-xl'
           >
             Page {page - 1}
           </button>
@@ -86,16 +97,16 @@ const Home = () => {
 
     if (page < numberOfPages) {
       return (
-        <div className='mt-4 flex justify-between'>
+        <div className='mt-8 flex justify-between px-4'>
           <button
             onClick={() => setPage(page - 1)}
-            className='bg-green-400 py-2 px-3 text-white rounded'
+            className='btn py-2 px-3 text-white rounded-xl'
           >
             Page {page - 1}
           </button>
           <button
             onClick={() => setPage(page + 1)}
-            className='bg-green-400 py-2 px-3 text-white rounded'
+            className='btn py-2 px-3 text-white rounded-xl'
           >
             Page {page + 1}
           </button>
@@ -108,7 +119,7 @@ const Home = () => {
 
   //Pagination features
   //We are on page One and there are other pages
-  //We are  on page One and tthere are no other pages
+  //We are  on page One and there are no other pages
 
   //last page
 
@@ -126,8 +137,8 @@ const Home = () => {
       return <Spinner />;
     }
 
-    if (recipe?.error) {
-      return 'Opps 😢 An Error Occured';
+    if (recipe?.error.type) {
+      return recipe.error.msg || 'Oooops An Error Occured! Please try again ;)';
     }
 
     return getSearchResultsPage(recipe, page)?.map((item) => (
@@ -135,15 +146,38 @@ const Home = () => {
     ));
   }
 
+  function handleChange(e) {
+    setInput(e.target.value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!input) return;
+    setSearch(input);
+  }
+
+  const handlePopup = (e) => {
+    console.log(e.target.classList.contains('pop'));
+    if (e.target.classList.contains('pop')) {
+      setShow(true);
+    }
+    if (!e.target.classList.contains('pop')) {
+      setShow(false);
+    }
+  };
   return (
-    <div className='bg w-full flex flex-col p-4 rounded-lg'>
-      <header className='flex justify-between'>
-        <div>Logo</div>
-        <div>Search</div>
-        <div>Icons</div>
-      </header>
+    <div
+      className='glass21 w-full flex flex-col p-4 rounded-lg'
+      onClick={handlePopup}
+    >
+      <Topbar
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        handlePopup={handlePopup}
+        show={show}
+      />
       <section className='flex'>
-        <section className='bg-white w-1/3 min-h-screen '>
+        <section className='glass21 w-2/5 min-h-screen pt-3 rounded-2xl'>
           <> {renderPage(recipes)}</>
           <>{calcPagesNumber(page)}</>
         </section>
