@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { getRecipes } from '../component/utils/helpers';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import DisplayMeals from './views/DisplayMeals';
 import Sidebar from './views/Sidebar';
 import Spinner from './views/Spinner';
-import { RESULT_PER_PAGE } from './config';
+import { RESULT_PER_PAGE, START_PAGE } from './config';
 
 import Topbar from './Topbar';
-
+import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 const Home = () => {
+  const history = useHistory();
+
   const { id } = useParams();
+
+  useEffect(() => {
+    history.push('/');
+  }, [history]);
 
   const [recipes, setRecipes] = useState({
     loading: false,
@@ -20,10 +26,10 @@ const Home = () => {
     resultPerPage: RESULT_PER_PAGE,
   });
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(START_PAGE);
   const [search, setSearch] = useState('');
   const [input, setInput] = useState('');
-  const [show, setShow] = useState(false);
+
   useEffect(() => {
     // const API = 'https://forkify-api.herokuapp.com/api/v2/recipes?search=pizza';
     (async () => {
@@ -71,9 +77,10 @@ const Home = () => {
         <div className='flex mt-8 px-4 justify-end'>
           <button
             onClick={() => setPage(page + 1)}
-            className='btn py-2 px-3 text-white rounded-xl'
+            className='btn py-2 px-3 text-white flex gap-1 items-center rounded-xl'
           >
             Page {page + 1}
+            <AiOutlineArrowRight />
           </button>
         </div>
       );
@@ -85,8 +92,9 @@ const Home = () => {
         <div className='flex mt-8 justify-end px-4'>
           <button
             onClick={() => setPage(page - 1)}
-            className='btn py-2 px-3 text-white rounded-xl'
+            className='btn py-2 px-3 flex gap-1 items-center text-white rounded-xl'
           >
+            <AiOutlineArrowLeft />
             Page {page - 1}
           </button>
         </div>
@@ -100,15 +108,17 @@ const Home = () => {
         <div className='mt-8 flex justify-between px-4'>
           <button
             onClick={() => setPage(page - 1)}
-            className='btn py-2 px-3 text-white rounded-xl'
+            className='btn py-2 px-3 text-white rounded-xl flex gap-1 items-center'
           >
+            <AiOutlineArrowLeft />
             Page {page - 1}
           </button>
           <button
             onClick={() => setPage(page + 1)}
-            className='btn py-2 px-3 text-white rounded-xl'
+            className='btn py-2 px-3 text-white rounded-xl flex gap-1 items-center'
           >
             Page {page + 1}
+            <AiOutlineArrowRight />
           </button>
         </div>
       );
@@ -156,35 +166,56 @@ const Home = () => {
     setSearch(input);
   }
 
-  const handlePopup = (e) => {
-    console.log(e.target.classList.contains('pop'));
-    if (e.target.classList.contains('pop')) {
-      setShow(true);
+  const addRef = useRef();
+
+  const bookmarkRef = useRef();
+
+  const handleClicks = (e) => {
+    if (e.target.classList.contains('add')) {
+      addRef.current.classList.toggle('hidden');
     }
-    if (!e.target.classList.contains('pop')) {
-      setShow(false);
+
+    if (e.target.classList.contains('bookmarks')) {
+      bookmarkRef.current.classList.toggle('hidden');
+    }
+
+    if (!e.target.classList.contains('add')) {
+      addRef.current.classList.add('hidden');
+    }
+
+    if (!e.target.classList.contains('bookmarks')) {
+      bookmarkRef.current.classList.add('hidden');
     }
   };
+
   return (
     <div
-      className='glass21 w-full flex flex-col p-4 rounded-lg'
-      onClick={handlePopup}
+      className='glass21 w-10/12 flex flex-col relative rounded-lg'
+      onClick={handleClicks}
     >
       <Topbar
         handleChange={handleChange}
         handleSubmit={handleSubmit}
-        handlePopup={handlePopup}
-        show={show}
+        loading={recipes.loading}
+        bookmarkRef={bookmarkRef}
       />
       <section className='flex'>
         <section className='glass21 w-2/5 min-h-screen pt-3 rounded-2xl'>
           <> {renderPage(recipes)}</>
           <>{calcPagesNumber(page)}</>
         </section>
-        <section className=' w-full flex justify-center min-h-screen items-center '>
+        <section className='flex w-full min-h-screen '>
           <DisplayMeals id={id} />
         </section>
       </section>
+
+      <div
+        className='h-80 w-6/12 bg-white absolute hidden animate-slideIn left-80 top-32  '
+        ref={addRef}
+      >
+        {' '}
+        Modal{' '}
+      </div>
     </div>
   );
 };

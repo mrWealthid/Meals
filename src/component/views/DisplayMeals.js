@@ -3,6 +3,7 @@ import { getRecipe } from '../utils/helpers';
 
 import DisplayContent from './DisplayContent';
 import Spinner from './Spinner';
+import { useHistory } from 'react-router-dom';
 
 const DisplayMeals = ({ id }) => {
   const [recipe, setRecipe] = useState({
@@ -11,7 +12,7 @@ const DisplayMeals = ({ id }) => {
     error: false,
   });
 
-  // '5ed6604591c37cdc054bcd09'
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -42,12 +43,12 @@ const DisplayMeals = ({ id }) => {
     }
 
     if (!recipe?.data) {
-      return 'Start By Typing';
+      return 'Start by searching for a recipe or an ingredient. Have fun!';
     }
     return <DisplayContent recipe={recipe} />;
   }
 
-  return <>{renderPage(recipe)}</>;
+  return <div className='w-full'>{renderPage(recipe)}</div>;
 };
 
 export default DisplayMeals;

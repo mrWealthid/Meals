@@ -6,7 +6,7 @@ import { Route, Switch } from 'react-router-dom';
 
 function App() {
   return (
-    <div className='App min-h-screen p-12 flex'>
+    <div className='App min-h-screen justify-center py-8 items-center flex'>
       <Switch>
         <Route exact path='/' component={Home} />
         <Route path='/:id' component={Home} />
