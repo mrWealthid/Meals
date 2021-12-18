@@ -3,24 +3,30 @@ import { getRecipe } from '../utils/helpers';
 
 import DisplayContent from './DisplayContent';
 import Spinner from './Spinner';
-import { useHistory } from 'react-router-dom';
 
-const DisplayMeals = ({ id }) => {
+const DisplayMeals = ({ id, addBookmark, checkBookmark }) => {
   const [recipe, setRecipe] = useState({
     loading: false,
     data: null,
-    error: false,
+    error: {
+      type: false,
+      msg: '',
+    },
   });
-
-  const history = useHistory();
 
   useEffect(() => {
     (async () => {
       try {
         if (!id) return;
 
-        setRecipe({ loading: true });
-
+        setRecipe({
+          loading: true,
+          data: null,
+          error: {
+            type: false,
+            msg: '',
+          },
+        });
         const data = await getRecipe(id);
 
         const meal = data.data.recipe;
@@ -28,7 +34,14 @@ const DisplayMeals = ({ id }) => {
         console.log(meal);
         setRecipe({ loading: false, data: meal });
       } catch (error) {
-        setRecipe({ loading: false, data: null, error: true });
+        setRecipe({
+          loading: false,
+          data: null,
+          error: {
+            type: true,
+            msg: error.message,
+          },
+        });
       }
     })();
   }, [id]);
@@ -38,17 +51,32 @@ const DisplayMeals = ({ id }) => {
       return <Spinner />;
     }
 
-    if (recipe?.error) {
-      return 'We could not find that recipe. Please try another one!';
+    if (recipe.error?.type) {
+      return (
+        <p className='px-2 text-gray-600'>
+          {recipe.error.msg ||
+            'We could not find that recipe. Please try another one🤔!'}
+        </p>
+      );
     }
 
     if (!recipe?.data) {
-      return 'Start by searching for a recipe or an ingredient. Have fun!';
+      return (
+        <p className='px-2 text-gray-600'>
+          Start by searching for a recipe or an ingredient. Have fun 😃!
+        </p>
+      );
     }
-    return <DisplayContent recipe={recipe} />;
+    return (
+      <DisplayContent
+        recipe={recipe}
+        addBookmark={addBookmark}
+        checkBookmark={checkBookmark}
+      />
+    );
   }
 
-  return <div className='w-full'>{renderPage(recipe)}</div>;
+  return <div className='w-full min-h-screen'>{renderPage(recipe)}</div>;
 };
 
 export default DisplayMeals;

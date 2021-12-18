@@ -36,8 +36,6 @@ const getRecipes = async (search) => {
 
     const data = await resp.data;
 
-    console.log(data);
-
     // if (!data || (Array.isArray(data) && data.length === 0))
 
     if (data.results < 1) {

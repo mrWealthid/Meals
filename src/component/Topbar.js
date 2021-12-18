@@ -2,13 +2,13 @@ import React from 'react';
 import SearchView from './views/SearchView';
 import { FaUtensils, FaBookmark } from 'react-icons/fa';
 import { AiOutlineForm } from 'react-icons/ai';
+import Bookmarks from './views/Bookmarks';
 
 const Topbar = ({
   handleChange,
   handleSubmit,
-
+  bookmark,
   loading,
-
   bookmarkRef,
 }) => {
   return (
@@ -32,12 +32,16 @@ const Topbar = ({
             <FaBookmark /> Bookmarks
           </p>
           <div
-            className='h-40 absolute w-48 right-2 top-10 hidden  glass21 rounded-b-2xl px-2'
+            className={`${
+              bookmark.length > 4 ? 'h-auto' : ' h-48'
+            } absolute w-52 right-2 top-10 hidden glass221 animate-slideIn`}
             ref={bookmarkRef}
           >
-            <p>Show My Bookmarks</p>
-
-            <p>Show My Bookmarks</p>
+            {!bookmark.length > 0 ? (
+              <p className='p-2 text-xs'>You Have No Bookmark🤔!</p>
+            ) : (
+              bookmark.map((book) => <Bookmarks key={book.id} {...book} />)
+            )}
           </div>
         </div>
       </div>

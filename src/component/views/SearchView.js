@@ -13,7 +13,7 @@ const SearchView = ({ handleChange, handleSubmit, loading }) => {
             onChange={handleChange}
             placeholder='Search over 1,000,000 recipes...'
           />
-          <button className='btn py-2  text-sm px-2 flex gap-2 items-center mx-auto w-24 text-gray-500 transform inline-block hover:scale-110 duration-1000 transition-all'>
+          <button className='App py-2  text-sm px-2 flex gap-2 items-center mx-auto w-24 text-gray-500 transform inline-block hover:scale-110 duration-1000 transition-all'>
             Search
             {!loading ? <FaSearch /> : <FaSpinner className='animate-spin' />}
           </button>

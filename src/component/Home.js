@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import { getRecipes } from '../component/utils/helpers';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import DisplayMeals from './views/DisplayMeals';
 import Sidebar from './views/Sidebar';
 import Spinner from './views/Spinner';
@@ -10,13 +10,15 @@ import { RESULT_PER_PAGE, START_PAGE } from './config';
 import Topbar from './Topbar';
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 const Home = () => {
-  const history = useHistory();
+  // const history = useHistory();
 
   const { id } = useParams();
 
-  useEffect(() => {
-    history.push('/');
-  }, [history]);
+  // useEffect(() => {
+  //   history.push('/');
+  // }, [history]);
+
+  const [bookmark, setBookmark] = useState([]);
 
   const [recipes, setRecipes] = useState({
     loading: false,
@@ -77,7 +79,7 @@ const Home = () => {
         <div className='flex mt-8 px-4 justify-end'>
           <button
             onClick={() => setPage(page + 1)}
-            className='btn py-2 px-3 text-white flex gap-1 items-center rounded-xl'
+            className='App py-1 px-3 text-white flex gap-1 items-center rounded-xl'
           >
             Page {page + 1}
             <AiOutlineArrowRight />
@@ -92,7 +94,7 @@ const Home = () => {
         <div className='flex mt-8 justify-end px-4'>
           <button
             onClick={() => setPage(page - 1)}
-            className='btn py-2 px-3 flex gap-1 items-center text-white rounded-xl'
+            className='App py-1 px-3 flex gap-1 items-center text-white rounded-xl'
           >
             <AiOutlineArrowLeft />
             Page {page - 1}
@@ -108,14 +110,14 @@ const Home = () => {
         <div className='mt-8 flex justify-between px-4'>
           <button
             onClick={() => setPage(page - 1)}
-            className='btn py-2 px-3 text-white rounded-xl flex gap-1 items-center'
+            className='App py-1 px-3 text-white rounded-xl flex gap-1 items-center'
           >
             <AiOutlineArrowLeft />
             Page {page - 1}
           </button>
           <button
             onClick={() => setPage(page + 1)}
-            className='btn py-2 px-3 text-white rounded-xl flex gap-1 items-center'
+            className='App py-1 px-3 text-white rounded-xl flex gap-1 items-center'
           >
             Page {page + 1}
             <AiOutlineArrowRight />
@@ -148,7 +150,11 @@ const Home = () => {
     }
 
     if (recipe?.error.type) {
-      return recipe.error.msg || 'Oooops An Error Occured! Please try again ;)';
+      return (
+        <p className='px-2'>
+          {recipe.error.msg || 'Oooops An Error Occured! Please try again'}
+        </p>
+      );
     }
 
     return getSearchResultsPage(recipe, page)?.map((item) => (
@@ -188,9 +194,38 @@ const Home = () => {
     }
   };
 
+  const addBookmark = (id) => {
+    console.log(id);
+
+    // setRecipes({...recipes, data:recipes.data.map((el)=> el.id === id ? {...el,  bookmarked: true}: el) })
+    const newBookmark = recipes.data.find((el) => el.id === id);
+    console.log(bookmark);
+
+    setBookmark([...bookmark, newBookmark]);
+  };
+
+  const checkBookmark = (id) => {
+    return bookmark.some((booked) => booked.id === id);
+  };
+
+  //using local Storage to save bookmarks
+
+  useEffect(() => {
+    let FetchBookmarks = localStorage.getItem('Bookmarks');
+    if (FetchBookmarks) {
+      FetchBookmarks = JSON.parse(FetchBookmarks);
+
+      setBookmark(FetchBookmarks);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('Bookmarks', JSON.stringify(bookmark));
+  }, [bookmark]);
+
   return (
     <div
-      className='glass21 w-10/12 flex flex-col relative rounded-lg'
+      className='glass21 w-11/12 flex flex-col relative rounded-lg'
       onClick={handleClicks}
     >
       <Topbar
@@ -198,19 +233,24 @@ const Home = () => {
         handleSubmit={handleSubmit}
         loading={recipes.loading}
         bookmarkRef={bookmarkRef}
+        bookmark={bookmark}
       />
       <section className='flex'>
-        <section className='glass21 w-2/5 min-h-screen pt-3 rounded-2xl'>
+        <section className='glass21 w-2/5 min-h-screen py-3 rounded-2xl'>
           <> {renderPage(recipes)}</>
           <>{calcPagesNumber(page)}</>
         </section>
         <section className='flex w-full min-h-screen '>
-          <DisplayMeals id={id} />
+          <DisplayMeals
+            id={id}
+            addBookmark={addBookmark}
+            checkBookmark={checkBookmark}
+          />
         </section>
       </section>
 
       <div
-        className='h-80 w-6/12 bg-white absolute hidden animate-slideIn left-80 top-32  '
+        className='h-80 w-6/12 glass221 absolute hidden animate-slideIn left-80 top-32  '
         ref={addRef}
       >
         {' '}

@@ -18,15 +18,28 @@
 .App {
   background: linear-gradient(to right bottom, var(--color1), var(--color2));
 }
+
 .bg {
   background: whitesmoke;
 }
 
 .glass21 {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.3);
   backdrop-filter: opacity(100px);
   border: 2px solid transparent;
   background-size: contain;
+}
+
+.glass22 {
+  color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: opacity(100px);
+  border: 2px solid transparent;
+}
+
+.glass221 {
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: opacity(100px);
+  border: 2px solid transparent;
 }
 
 .btn {
