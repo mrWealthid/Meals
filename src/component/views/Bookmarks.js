@@ -5,7 +5,7 @@ const Bookmarks = ({ title, id, image_url: img }) => {
   const styles = {
     color: 'grey',
     background: ' #fbdb89',
-    width: '100%',
+    // width: '100%',
   };
   return (
     <div className=' hover:bg-gray-200 flex items-center gap-2'>
@@ -15,7 +15,12 @@ const Bookmarks = ({ title, id, image_url: img }) => {
         alt={title}
       />
 
-      <NavLink activeStyle={styles} to={`/${id}`} exact className='p-2 block'>
+      <NavLink
+        activeStyle={styles}
+        to={`/${id}`}
+        exact
+        className='p-2 py-3 block'
+      >
         <p className='text-xs'>{title.split('(')[0]}</p>
       </NavLink>
     </div>

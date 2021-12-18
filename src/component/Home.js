@@ -194,18 +194,18 @@ const Home = () => {
     }
   };
 
-  const addBookmark = (id) => {
-    console.log(id);
-
-    // setRecipes({...recipes, data:recipes.data.map((el)=> el.id === id ? {...el,  bookmarked: true}: el) })
-    const newBookmark = recipes.data.find((el) => el.id === id);
-    console.log(bookmark);
-
-    setBookmark([...bookmark, newBookmark]);
-  };
-
   const checkBookmark = (id) => {
     return bookmark.some((booked) => booked.id === id);
+  };
+  const addBookmark = (id) => {
+    if (checkBookmark(id)) {
+      setBookmark(bookmark.filter((el) => el.id !== id));
+    } else {
+      const newBookmark = recipes.data.find((el) => el.id === id);
+      console.log(bookmark);
+
+      setBookmark([...bookmark, newBookmark]);
+    }
   };
 
   //using local Storage to save bookmarks

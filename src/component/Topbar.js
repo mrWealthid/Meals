@@ -34,7 +34,7 @@ const Topbar = ({
           <div
             className={`${
               bookmark.length > 4 ? 'h-auto' : ' h-48'
-            } absolute w-52 right-2 top-10 hidden glass221 animate-slideIn`}
+            } absolute w-52 right-2 top-14 hidden glass221 animate-slideIn`}
             ref={bookmarkRef}
           >
             {!bookmark.length > 0 ? (

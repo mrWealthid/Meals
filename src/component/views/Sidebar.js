@@ -8,7 +8,7 @@ const Sidebar = ({ id, title, image_url: img }) => {
     width: '100%',
   };
   return (
-    <section className='flex flex-1 gap-2 hover:bg-gray-100'>
+    <section className='flex flex-1 gap-2 items-center hover:bg-gray-100'>
       <>
         <img
           className=' w-8 h-8 object-cover items-center flex justify-center cursor-pointer rounded-full overflow-hidden App'
